@@ -1,5 +1,2 @@
 # gitLit
-Sammy
-Sammyson
-Its Lit Fam
-You know the vibes
+Heres a (messy) dump of some recent projects from Data Structures at Texas Tech
