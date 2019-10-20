@@ -1,8 +1,20 @@
+// --------------------------------------------------------------------------------
+// AUTHOR: Samuel Adetunji
+// FILENAME: Lab6.cpp
+// SPECIFICATION: Make a binary search tree with basic functions
+// FOR: CS 2413 Data Structure Section 504
+// Expected output: A menu with the tree's available functions
+// Actual Output: A menu with the tree's available functions
+// Shoutouts: Special thanks to my prof Mario Pitalua Rodriguez for the
+// psuedocode on some of these functions
+// --------------------------------------------------------------------------------
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
 #include <time.h>
+#include <queue>
 using namespace std;
 
 typedef struct branch {
@@ -11,11 +23,53 @@ typedef struct branch {
   struct branch *right = NULL;
 } branch;
 
-//Function to get a new random number
+// NAME : dropElement
+// INPUT PARAMETERS: int pri[]: the given array, int *rear: a pointer to the the rear index of the current array
+// OUTPUT: 0 if there was an error, 1 if there wasn't
+// PURPOSE: removes an element from the array
+int dropElement(branch* pri[], int *rear){
+  //Deletes elements fromt he front of the line
+  if(*rear == 0){
+    cout<<"\nUnderflow error"<<endl;
+    return 0;
+  }
+  branch* hold= pri[0]; //holds the dropped element
+
+  for(int c=0;c<*rear;c++){
+    pri[c]=pri[c+1];
+  }
+  *rear-=1;
+  return hold->data;
+}
+
+// NAME : addElement
+// INPUT PARAMETERS: int pri[]: the given array,int num: the number to be added, int *rear: a pointer to the the rear index of the current array
+// OUTPUT: 0 if there was an error, 1 if there wasn't
+// PURPOSE: adds an element to the array
+int addElement(branch* pri[], branch* num, int *rear){
+//Adds elements as needed
+  if(*(rear)==16-1){
+    cout<<"\nOverflow error, sorry"<<endl;
+    return 0;
+  } else {
+    pri[*rear] = num;
+    *(rear)+=1;
+  }
+  return 1;
+}
+
+// NAME: getNew
+// Input: none
+// Output: a new random number
+// Function to get a new random number
 int newNum(){
   return rand()%50+1;
 }
 
+// NAME: insert
+// Input: the root node of the tree, a new integer
+// Output: none
+// Purpose: adds a new branch to the tree
 void insert(branch* nSeed, int num){
   //Check if we were passed a null tree
   if(nSeed == NULL){
@@ -43,6 +97,10 @@ void insert(branch* nSeed, int num){
   }
 }
 
+// NAME: newTree
+// Input: none
+// Output: a new filled up binary tree
+// Purpose: builds a new tree with random numbers from 1-50
 branch* newTree(){
   //Initialize the tree and add an int to the root node
   branch* seed = (branch*)malloc(sizeof(branch));
@@ -56,6 +114,10 @@ branch* newTree(){
   return seed;
 }
 
+// NAME: findLargestNode
+// Input: the root node of the tree
+// Output: the branch with the largest integer
+// Purpose: Just to find the largest node in the tree
 branch* findLargestNode(branch* Seed){
   if(Seed == NULL || Seed->right == NULL)
     return Seed;
@@ -63,6 +125,10 @@ branch* findLargestNode(branch* Seed){
   return findLargestNode(Seed->right);
 }
 
+// NAME: Delete
+// Input: the root node of the tree, the integer to be deleted
+// Actual Output: A prompt if it has been found and deleted or not
+// Purpose: Deletes the last node in the list
 void Delete(branch* Seed, int num){
   if(Seed == NULL){
     cout<<num<<" isn't in this tree, sorry."<<endl;
@@ -88,12 +154,20 @@ void Delete(branch* Seed, int num){
   }
 }
 
+// NAME: tracePath
+// Input: a pointer to the trace path array in find(), the number of indecies in the array
+// Actual Output: A printed list of the path taked to get to the sought after branch
+// Purpose: Print out the path for the tree
 void tracePath(int* path, int index){
   for(int c = 0; c < index;c++){
     cout<<*(path+c)<<" -> ";
   }
 }
 
+// NAME: find
+// Input: the root node of the tree, the integer to be found
+// Output: The branch that we were looking for
+// Purpose: Locate and print a path to a particular branch
 branch* find(branch* Seed, int num){
   int path[10], slots = 0;
   branch* ant = Seed;
@@ -127,6 +201,40 @@ branch* find(branch* Seed, int num){
   return ant;
 }
 
+// NAME : Display
+// INPUT PARAMETERS: int pri[]: the given array, int *rear: a pointer to the the rear index of the current array
+// OUTPUT: the entire given array printed to the counsle
+// PURPOSE: displays the entire array
+void Display(branch* Seed){
+  branch* ant = Seed;
+  branch* queue[20];
+  int slots = 0;
+  addElement(&queue[0], ant, &slots);
+  addElement(&queue[0], NULL, &slots);
+  for(;;){
+    ant = queue[0];
+    int num = dropElement(&queue[slots],&slots);
+    if(ant!=NULL){
+      cout<<num<<" ";
+      if(ant->left!= NULL){
+        addElement(&queue[0], ant->left, &slots);
+      }
+      if(ant->right!= NULL){
+        addElement(&queue[0], ant->right, &slots);
+      }
+    } else {
+      cout<<"\n";
+      if(slots==0)
+        break;
+      addElement(&queue[0], NULL, &slots);
+    }
+  }
+}
+
+// NAME : main
+// INPUT PARAMETERS: none
+// OUTPUT: returns a zero
+// PURPOSE: Start the program, provide a menu for the user.
 int main() {
   //Get the random number seed
   srand (time(NULL));
@@ -167,6 +275,7 @@ int main() {
 
       //Display the tree
       case 3: cout<<"Here is your current binary search tree."<<endl;
+      Display(currTree);
       break;
 
       case 4: break;
