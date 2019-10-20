@@ -6,7 +6,8 @@
 // Expected output: A menu with the tree's available functions
 // Actual Output: A menu with the tree's available functions
 // Shoutouts: Special thanks to my prof Mario Pitalua Rodriguez for the
-// psuedocode on some of these functions
+// psuedocode on some of these functions. Also to Phyley CS on youtube for the
+// queue explanation
 // --------------------------------------------------------------------------------
 
 #include <stdlib.h>
@@ -23,6 +24,8 @@ typedef struct branch {
   struct branch *right = NULL;
 } branch;
 
+//My messy attempt at queue functions from Lab3
+/*
 // NAME : dropElement
 // INPUT PARAMETERS: int pri[]: the given array, int *rear: a pointer to the the rear index of the current array
 // OUTPUT: 0 if there was an error, 1 if there wasn't
@@ -57,7 +60,7 @@ int addElement(branch* pri[], branch* num, int *rear){
   }
   return 1;
 }
-
+*/
 // NAME: getNew
 // Input: none
 // Output: a new random number
@@ -202,31 +205,30 @@ branch* find(branch* Seed, int num){
 }
 
 // NAME : Display
-// INPUT PARAMETERS: int pri[]: the given array, int *rear: a pointer to the the rear index of the current array
-// OUTPUT: the entire given array printed to the counsle
-// PURPOSE: displays the entire array
+// INPUT PARAMETERS: the root node of the tree
+// OUTPUT: The entire tree printed out
+// PURPOSE: displays the tree currerntly
 void Display(branch* Seed){
-  branch* ant = Seed;
-  branch* queue[20];
-  int slots = 0;
-  addElement(&queue[0], ant, &slots);
-  addElement(&queue[0], NULL, &slots);
+  if(Seed == NULL)
+    return;
+  queue<branch*> q;
+  q.push(Seed);
+  q.push(NULL);
   for(;;){
-    ant = queue[0];
-    int num = dropElement(&queue[slots],&slots);
-    if(ant!=NULL){
-      cout<<num<<" ";
-      if(ant->left!= NULL){
-        addElement(&queue[0], ant->left, &slots);
+    branch* ant = q.front();
+    q.pop();
+    if(ant != NULL){
+      cout<<ant->data<< " ";
+      if(ant->left != NULL)
+        q.push(ant->left);
+      if(ant->right != NULL){
+        q.push(ant->right);
+      } else{
+        cout << "\n";
+        if(q.empty())
+          break;
+        q.push(NULL);
       }
-      if(ant->right!= NULL){
-        addElement(&queue[0], ant->right, &slots);
-      }
-    } else {
-      cout<<"\n";
-      if(slots==0)
-        break;
-      addElement(&queue[0], NULL, &slots);
     }
   }
 }
