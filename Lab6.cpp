@@ -88,9 +88,9 @@ void Delete(branch* Seed, int num){
   }
 }
 
-void tracePath(int path[], int slots){
-  for(int c = 0; c< slots;c++){
-    cout<<path[slots]<<" -> ";
+void tracePath(int* path, int index){
+  for(int c = 0; c < index;c++){
+    cout<<*(path+c)<<" -> ";
   }
 }
 
@@ -102,7 +102,7 @@ branch* find(branch* Seed, int num){
     slots++;
     if(ant->data == num){
       cout<<"Found it."<<endl;
-      tracePath(path, slots);
+      tracePath(&path[0], slots);
       return Seed;
     } else if(ant == NULL){
       cout<<"Sorry, your item isn't in here..."<<endl;
