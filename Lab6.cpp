@@ -88,16 +88,25 @@ void Delete(branch* Seed, int num){
   }
 }
 
+void tracePath(int path[], int slots){
+  for(int c = 0; c< slots;c++){
+    cout<<path[slots]<<" -> ";
+  }
+}
+
 branch* find(branch* Seed, int num){
+  int path[10], slots = 0;
   branch* ant = Seed;
-  bool found = false;
-  while(found == false){
-    if(Seed->data == num){
+  while(ant != NULL){
+    path[slots] = ant->data;
+    slots++;
+    if(ant->data == num){
       cout<<"Found it."<<endl;
+      tracePath(path, slots);
       return Seed;
-    } else if(Seed == NULL){
+    } else if(ant == NULL){
       cout<<"Sorry, your item isn't in here..."<<endl;
-      return NULL;
+      return ant;
     }
     if(num < ant->data){
       if(ant->left != NULL){
@@ -107,7 +116,7 @@ branch* find(branch* Seed, int num){
         return NULL;
       }
     } if(num > ant->data){
-      if(ant->right != NULL){
+        if(ant->right != NULL){
         ant = ant->right;
       } else {
         cout<<"Sorry, your item isn't in here..."<<endl;
@@ -115,6 +124,7 @@ branch* find(branch* Seed, int num){
       }
     }
   }
+  return ant;
 }
 
 int main() {
@@ -151,7 +161,7 @@ int main() {
       if(find(currTree, num)){
         cout<<"I found a branch with the integer "<<num<<endl;
       } else {
-        cout<<"I couldn't find a branch with the integer. Sorry. UwU"<<num<<endl;
+        cout<<"I couldn't find a branch with the integer. Sorry. UwU "<<num<<endl;
       }
       break;
 
