@@ -120,7 +120,7 @@ void deleteRoot(){
 
   for(int c = last; c >= 0; c--){
     min_heapify(index + 1, c);
-  }
+  } 
 }
 
 int main() {
